@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Services Offered</title>
+{% endblock %}
+{% block content %}
+
+<header>
+    <h1>Services Offered by Security Agencies</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'clients' %}">Clients</a>
+        <a href="{% url 'job_list' %}">Job Listings</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Available Security Agencies</h1>
+    <ul>
+        {% for agency in agencies %}
+            <li>
+                <h2>{{ agency.name }}</h2>
+                <p>{{ agency.description }}</p>
+                <p>Location: {{ agency.location }}</p>
+                <p>Services Offered: {{ agency.services_offered }}</p>
+                <a href="{% url 'update_security_companies' agency.id %}">Edit</a>  <!-- Edit link -->
+            </li>
+        {% empty %}
+            <li class="no-agencies">No agencies found.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+{% endblock %}

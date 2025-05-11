@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Applicant</title>
+{% endblock %}
+{% block content %}
+
+    <header>
+        <h1>Job Listings</h1>
+        <nav>
+            <a href="{% url 'home'%}">Home</a>
+            <a href="{% url 'clients'%}">Clients</a>
+            <a href="{% url 'our_services'%}">Services</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <section id="job-listings" class="job-listings">
+            <h2>Job Listings</h2>
+            <div class="job">
+                <h3>Security Guard</h3>
+                <p><strong>Agency:</strong> SecureGuard Kenya</p>
+                <p><strong>Location:</strong> Nairobi</p>
+                <p><strong>Responsibilities:</strong> Monitor premises, ensure safety.</p>
+                <button>Apply Now</button>
+            </div>
+            <div class="job">
+                <h3>CCTV Operator</h3>
+                <p><strong>Agency:</strong> Watchful Eyes Security</p>
+                <p><strong>Location:</strong> Mombasa</p>
+                <p><strong>Responsibilities:</strong> Monitor CCTV feeds, report incidents.</p>
+                <button>Apply Now</button>
+            </div>
+            <div class="job">
+                <h3>Security Consultant</h3>
+                <p><strong>Agency:</strong> Alpha Security Services</p>
+                <p><strong>Location:</strong> Kisumu</p>
+                <p><strong>Responsibilities:</strong> Conduct risk assessments, develop security plans.</p>
+                <button>Apply Now</button>
+            </div>
+            <div class="job">
+                <h3>Patrol Officer</h3>
+                <p><strong>Agency:</strong> Shield Security Agency</p>
+                <p><strong>Location:</strong> Nakuru</p>
+                <p><strong>Responsibilities:</strong> Conduct regular patrols, maintain order.</p>
+                <button>Apply Now</button>
+            </div>
+            <div class="job">
+                <h3>Security Manager</h3>
+                <p><strong>Agency:</strong> Guardian Security Solutions</p>
+                <p><strong>Location:</strong> Eldoret</p>
+                <p><strong>Responsibilities:</strong> Oversee security operations, manage staff.</p>
+                <button>Apply Now</button>
+            </div>
+        </section>
+    
+        <section id="apply">
+            <h2>Application Process</h2>
+            <p>Track your application status and manage your profile.</p>
+            <button>Login to Your Profile</button>
+        </section>
+    
+        <section id="resources" class="resources">
+            <h2>Resources</h2>
+            <p>Check out our articles on job searching tips and interview preparation.</p>
+            <ul>
+                <li><a href="#">Top 10 Job Search Tips</a></li>
+                <li><a href="#">How to Ace Your Interview</a></li>
+                <li><a href="#">Building a Professional Resume</a></li>
+            </ul>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Applicant Site. All rights reserved.</p>
+    </footer>   
+
+{% endblock %}

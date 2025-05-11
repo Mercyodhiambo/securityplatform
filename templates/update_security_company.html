@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Update Security Company</title>
+{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h2>Update Security Company</h2>
+    <form method="POST">
+        {% if company.logo %}
+            <img src="{{ company.logo.url }}" alt="Company Logo" style="width: 100px; height: 100px;">
+        {% endif %}
+        {% csrf_token %}
+        <input type="image" placeholder="upload company logo" value="{{ company.logo }}" required>
+        <input type="text" name="description" placeholder="Description" value="{{ company.description }}" required>
+        <input type="text" name="location" placeholder="Location" value="{{ company.location }}" required>
+        <textarea name="services_offered" placeholder="Services Offered">{{ company.services_offered }}</textarea>  
+        <input type="submit" value="Update">
+    </form>
+    <div class="footer">
+        <p><a href="{% url 'list_agencies' %}">Back to Agency List</a></p>
+    </div>
+</div>
+{% endblock %}

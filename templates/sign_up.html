@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Sign Up</title>
+{% endblock %}
+{% block content %}
+<div class="">
+    <div class="form-container">
+        <h2>Sign Up</h2>
+        <form action="{% url 'register_user' %}" method="POST">  <!-- Update action URL -->
+            {% csrf_token %}  <!-- Add CSRF token here -->
+            <input type="text" name="first_name" placeholder=" First Name" required>
+            <input type="text" name="last_name" placeholder=" Last Name" required>
+            <input type="text" name="username" placeholder=" Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+
+            
+            <label for="role">Select Role:</label>
+            <select name="role" id="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="applicant">Applicant</option>
+                <option value="employer">Employer</option>
+                <option value="Client">Client</option>
+            </select>
+            
+            <input type="submit" value="Create Account">
+        </form>
+        <div class="footer">
+            <p>Already have an account? <a href="{% url 'log_in' %}">Log In</a></p>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

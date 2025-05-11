@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Client</title>
+{% endblock %}
+{% block content %}
+<header>
+    <h1>Client</h1>
+    <h2> Find Variety of Security Services Providers</h2>
+</header>
+
+<div class="container">
+    <h2>Available Security Agencies</h2>
+    <div class="agency-list">
+        <div class="agency">
+            <div class="agency-info">
+                <strong>SecureGuard Kenya</strong><br>
+                Services: Security Guard Services, CCTV Surveillance<br>
+                Location: Nairobi
+            </div>
+            <button class="contact-button">Contact</button>
+        </div>
+        <div class="agency">
+            <div class="agency-info">
+                <strong>Watchful Eyes Security</strong><br>
+                Services: Alarm Systems, Risk Assessment<br>
+                Location: Mombasa
+            </div>
+            <button class="contact-button">Contact</button>
+        </div>
+        <div class="agency">
+            <div class="agency-info">
+                <strong>Alpha Security Services</strong><br>
+                Services: Executive Protection, Event Security<br>
+                Location: Kisumu
+            </div>
+            <button class="contact-button">Contact</button>
+        </div>
+        <div class="agency">
+            <div class="agency-info">
+                <strong>Shield Security Agency</strong><br>
+                Services: Mobile Patrols, Risk Management<br>
+                Location: Nakuru
+            </div>
+            <button class="contact-button">Contact</button>
+        </div>
+        <div class="agency">
+            <div class="agency-info">
+                <strong>Guardian Security Solutions</strong><br>
+                Services: Fire Safety, Emergency Response<br>
+                Location: Eldoret
+            </div>
+            <button class="contact-button">Contact</button>
+        </div>
+    </div>
+
+    <h3>Request Security Services</h3>
+    <div class="request-form">
+        <label for="service-request">Describe the type of security services you need:</label><br>
+        <textarea id="service-request" placeholder="Type your request here..."></textarea><br>
+        <button class="contact-button">Submit Request</button>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Security Agency Dashboard. All rights reserved.</p>
+</footer>
+{% endblock %}

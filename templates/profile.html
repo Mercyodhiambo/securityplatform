@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>My Profile</title>
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>My Profile</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'job_list' %}">Job Listings</a>
+       
+    </nav>
+</header>
+
+<div class="container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="user-profile">
+        <div class="profile-header">
+            <h2>{{ user.username }}'s Profile</h2>
+            <p>Member since: {{ user.date_joined|date:"F d, Y" }}</p>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-info">
+                <h3>Account Information</h3>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                {% if user.profile.location %}
+                <p><strong>Location:</strong> {{ user.profile.location }}</p>
+                {% endif %}
+                {% if user.profile.birth_date %}
+                <p><strong>Birth Date:</strong> {{ user.profile.birth_date|date:"F d, Y" }}</p>
+                {% endif %}
+                {% if user.profile.bio %}
+                <div class="bio">
+                    <h4>About Me</h4>
+                    <p>{{ user.profile.bio }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="profile-edit">
+                <h3>Edit Profile</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <fieldset class="form-group">
+                        <legend>User Information</legend>
+                        {{ user_form.as_p }}
+                    </fieldset>
+                    
+                    <fieldset class="form-group">
+                        <legend>Profile Information</legend>
+                        {{ profile_form.as_p }}
+                    </fieldset>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Applicant Site. All rights reserved.</p>
+</footer>
+{% endblock %}
