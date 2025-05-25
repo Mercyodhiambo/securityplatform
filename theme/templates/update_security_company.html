@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Update Security Company</title>
+{% endblock %}
+{% block content %}
+{% load static %}
+<section class="bg-gray-100 py-16 min-h-screen">
+    <div class="container mx-auto px-4 max-w-lg">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Update Security Company</h2>
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                {% if company.logo %}
+                    <div class="flex justify-center mb-4">
+                        <img src="{{ company.logo.url }}" alt="Company Logo" class="w-24 h-24 object-cover rounded-full border">
+                    </div>
+                {% endif %}
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Company Logo</label>
+                    <input type="file" name="logo" class="block w-full text-gray-700 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Description</label>
+                    <input type="text" name="description" placeholder="Description" value="{{ company.description }}" required class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Location</label>
+                    <input type="text" name="location" placeholder="Location" value="{{ company.location }}" required class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Services Offered</label>
+                    <textarea name="services_offered" placeholder="Services Offered" class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400">{{ company.services_offered }}</textarea>
+                </div>
+                <div class="flex justify-center">
+                    <input type="submit" value="Update" class="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-700 transition font-semibold cursor-pointer">
+                </div>
+            </form>
+            <div class="mt-6 text-center">
+                <a href="{% url 'list_agencies' %}" class="text-gray-600 hover:text-gray-900 underline">Back to Agency List</a>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="bg-gray-900 text-gray-300 py-6 text-center mt-10">
+    <p>&copy; 2025 Security &amp; Job Hiring Platform. All rights reserved.</p>
+</footer>
+{% endblock %}

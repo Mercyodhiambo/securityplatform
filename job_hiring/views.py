@@ -15,7 +15,7 @@ from .models import Profile
 # View for listing all jobs
 def job_list(request):
     jobs = Job.objects.all()  # Fetch all job entries
-    return render(request, 'job_lists.html', {'jobs': jobs}) 
+    return render(request, 'jobs.html', {'jobs': jobs}) 
 
 # View for clients page
 def clients(request):
@@ -27,7 +27,7 @@ def our_services(request):
 
 # View for about us page
 def about_us(request):  
-    return render(request, 'about_us.html')
+    return render(request, 'about_us.html', {'page': 'about_us'})
 
 # View for employer page
 def employer(request):  
@@ -81,11 +81,11 @@ def sign_up(request):
         else:
             messages.error(request, 'Error creating account. Please check the form.')
             return redirect('sign_up')
-    return render(request, 'sign_up.html')
+    return render(request, 'sign_up.html', {'page': 'sign_up'})
 
 
 def landing_page(request):
-    return render(request, 'landing_page.html')
+    return render(request, 'landing_page.html', {'page': 'landing'})
 
 # View for login
 def log_in(request):
@@ -138,8 +138,6 @@ def submit_application(request, job_id):
 
 
 # View for posting a job
-
-@login_required
 def post_job(request):
     # Assuming you have a way to check the user's role
     
@@ -155,6 +153,9 @@ def post_job(request):
 def list_agencies(request):
     agencies = SecurityCompany.objects.all()  # Fetch all employers/agencies
     return render(request, 'list_agencies.html', {'agencies': agencies})
+
+def add_security_agency(request):
+    return render(request, 'new_security_agency.html') 
 
 def update_security_companies(request, company_id):
     company = get_object_or_404(SecurityCompany, id=company_id)

@@ -1,0 +1,52 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css %}
+    {% block title %}
+    {% endblock %}
+    <!-- Example navigation bar HTML that you can integrate into your base.html -->
+<!-- <nav class="main-nav">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'job_list' %}">Job Listings</a>
+    <a href="{% url 'clients' %}">Clients</a>
+    <a href="{% url 'our_services' %}">Services</a>
+    
+    {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'log_out' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'log_in' %}">Login</a>
+        <a href="{% url 'sign_up' %}">Sign Up</a>
+    {% endif %}
+</nav> -->
+</head>
+<body>
+    <header class="{% if page == 'landing' or page == 'about_us' %}bg-white text-gray-600{% else %}bg-gray-600 text-white{% endif %} shadow">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between py-4 px-6">
+            <h1 class="text-2xl font-bold mb-2 md:mb-0 tracking-wide">Security Job and Hiring Platform</h1>
+            <nav class="flex flex-wrap gap-4">
+                <a href="{% url 'landing_page' %}" class="hover:text-blue-300 transition">Home</a>
+                <a href="{% url 'about_us' %}" class="hover:text-blue-300 transition">About Us</a>
+                {% if page == 'landing' %}
+                <a href="#services" class="hover:text-blue-300 transition">Services</a>
+                {% endif %}
+                <a href="job_list" class="hover:text-blue-300 transition">Applicant site</a>
+                <a href="{% url 'post_job' %}" class="hover:text-blue-300 transition">Post Job</a>
+                <a href="{% url 'list_agencies' %}" class="hover:text-blue-300 transition">Security Agencies</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'log_out' %}" class="hover:text-blue-300 transition">Logout</a>
+                {% else %}
+                <a href="{% url 'log_in' %}" class="hover:text-blue-300 transition">Login</a>
+                {% endif %}
+                <a href="#" class="hover:text-blue-300 transition">Contact Us</a>
+            </nav>
+        </div>
+    </header>
+    
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
