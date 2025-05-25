@@ -41,6 +41,7 @@ class Job(models.Model):
     security_company = models.ForeignKey( SecurityCompany, on_delete=models.CASCADE, null=True, blank=True)  # Link to SecurityCompany model
     title = models.CharField(max_length=200)
     description = models.TextField()
+    requirements = models.TextField(blank=True, null=True)  # Optional field for job requirements
     posted_date = models.DateTimeField(auto_now_add=True)
     location = models.CharField(max_length=100)
 
@@ -76,16 +77,6 @@ class Profile(models.Model):
     
     def __str__(self):
         return self.user.username
-
-# Signal to create or update user profile when user is created/updated
-        @receiver(post_save, sender=User)
-        def create_user_profile(sender, instance, created, **kwargs):
-            if created:
-                Profile.objects.create(user=instance)
-
-        @receiver(post_save, sender=User)
-        def save_user_profile(sender, instance, **kwargs):
-                 instance.profile.save()
 
 
 class Client(models.Model):

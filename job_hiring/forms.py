@@ -1,35 +1,45 @@
 
+from .models import User, Applicant, SecurityCompany, Client
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from.models import User, Profile, SecurityCompany, Job, Applicant, JobApplication
-from django.contrib.auth import get_user_model
 
-class UserForm(UserCreationForm):
+
+class CustomUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1' ,'password2' , 'first_name', 'last_name' , 'role']
+        fields = ('username', 'email', 'first_name',
+                  'last_name', 'role', 'password1', 'password2')
 
 
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-    
+class ApplicantForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
-
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['bio', 'location', 'birth_date']
+        model = Applicant
+        fields = ['resume']
         widgets = {
-            'birth_date': forms.DateInput(attrs={'type': 'date'}),
+            'resume': forms.ClearableFileInput(attrs={'multiple': False, 'accept': '.pdf,.doc,.docx', 'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
         }
-        
+
+
 class SecurityCompanyForm(forms.ModelForm):
     class Meta:
         model = SecurityCompany
-        fields = ['name', 'logo', 'description', 'location', 'services_offered']
+        fields = ['name', 'logo', 'description',
+                  'location', 'services_offered']
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
-            'services_offered': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
+            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
+            'description': forms.Textarea(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
+            'location': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
+            'services_offered': forms.Textarea(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
+        }
+
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['company_name', 'address', 'phone']
+        widgets = {
+            'company_name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
+            'address': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
+            'phone': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
         }
