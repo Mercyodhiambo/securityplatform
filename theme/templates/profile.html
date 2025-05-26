@@ -5,74 +5,196 @@
 {% endblock %}
 
 {% block content %}
-<header>
-    <h1>My Profile</h1>
-    <nav>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'job_list' %}">Job Listings</a>
-       
-    </nav>
-</header>
+<div class="container max-w-3xl mx-auto my-12">
+    <section class="bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
+        <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
+            <strong class="text-gray-800">{{ user.username }}</strong>
+        </div>
+        <div class="flex-1 p-6">
+            <h1 class="text-2xl font-bold mb-2 text-gray-800">My Profile</h1>
+            <p class="mb-2"><span class="font-semibold">Email:</span> {{ user.email }}</p>
+            <p class="mb-2"><span class="font-semibold">Full Name:</span> {{ user.first_name }} {{ user.last_name }}</p>
+            {% if user.profile.location %}
+            <p class="mb-2"><span class="font-semibold">Location:</span> {{ user.profile.location }}</p>
+            {% endif %}
+            {% if user.profile.birth_date %}
+            <p class="mb-2"><span class="font-semibold">Birth Date:</span> {{ user.profile.birth_date|date:"F d, Y" }}</p>
+            {% endif %}
+            {% if user.profile.bio %}
+            <div class="mb-2">
+                <span class="font-semibold">About Me:</span>
+                <p>{{ user.profile.bio }}</p>
+            </div>
+            {% endif %}
+            <p class="mb-4"><span class="font-semibold">Member since:</span> {{ user.date_joined|date:"F d, Y" }}</p>
+        </div>
+    </section>
 
-<div class="container">
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="message {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+    {% if role == 'applicant' %}
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">My Applications</h2>
+        <div class="mb-4 flex gap-6">
+            <span>Total: <strong>{{ total_applications }}</strong></span>
+            <span>Accepted: <strong>{{ accepted }}</strong></span>
+            <span>Rejected: <strong>{{ rejected }}</strong></span>
+            <span>Pending: <strong>{{ pending }}</strong></span>
+        </div>
+        {% if applications %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b text-left">Job</th>
+                        <th class="py-2 px-4 border-b text-left">Status</th>
+                        <th class="py-2 px-4 border-b text-left">Applied On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-4 border-b">{{ application.job.title }}</td>
+                        <td class="py-2 px-4 border-b capitalize">{{ application.status }}</td>
+                        <td class="py-2 px-4 border-b">{{ application.submitted_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">You have not applied for any jobs yet.</p>
+        {% endif %}
+    </section>
+    {% elif role == 'client' %}
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">My Hires</h2>
+        <div class="mb-4 flex gap-6">
+            <span>Total Hires: <strong>{{ total_hires }}</strong></span>
+            <span>Completed: <strong>{{ completed }}</strong></span>
+            <span>Ongoing: <strong>{{ ongoing }}</strong></span>
+            <span>Security Agencies: <strong>{{ security_agencies_count }}</strong></span>
+        </div>
+        {% if hires %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b text-left">Agency</th>
+                        <th class="py-2 px-4 border-b text-left">Status</th>
+                        <th class="py-2 px-4 border-b text-left">From</th>
+                        <th class="py-2 px-4 border-b text-left">To</th>
+                        <th class="py-2 px-4 border-b text-left">Hired On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hire in hires %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-4 border-b">{{ hire.security_company.name }}</td>
+                        <td class="py-2 px-4 border-b capitalize">{{ hire.status }}</td>
+                        <td class="py-2 px-4 border-b">{{ hire.start_date|date:"Y-m-d" }}</td>
+                        <td class="py-2 px-4 border-b">{{ hire.end_date|date:"Y-m-d" }}</td>
+                        <td class="py-2 px-4 border-b">{{ hire.created_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">You have not hired anyone yet.</p>
+        {% endif %}
+    </section>
+    {% elif role == 'employer' %}
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">My Jobs</h2>
+        <div class="mb-4 flex gap-6">
+            <span>Total Jobs: <strong>{{ total_jobs }}</strong></span>
+            <span>Total Applications: <strong>{{ total_applications }}</strong></span>
+        </div>
+        {% if jobs %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b text-left">Title</th>
+                        <th class="py-2 px-4 border-b text-left">Location</th>
+                        <th class="py-2 px-4 border-b text-left">Posted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-4 border-b">{{ job.title }}</td>
+                        <td class="py-2 px-4 border-b">{{ job.location }}</td>
+                        <td class="py-2 px-4 border-b">{{ job.posted_date|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">You have not posted any jobs yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">My Hires</h2>
+        <div class="mb-4 flex gap-6">
+            <span>Total Hires: <strong>{{ employer_total_hires }}</strong></span>
+            <span>Completed: <strong>{{ employer_completed_hires }}</strong></span>
+            <span>Ongoing: <strong>{{ employer_ongoing_hires }}</strong></span>
+        </div>
+        {% if employer_hires %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b text-left">Client Name</th>
+                        <th class="py-2 px-4 border-b text-left">Status</th>
+                        <th class="py-2 px-4 border-b text-left">Start Date</th>
+                        <th class="py-2 px-4 border-b text-left">End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hire in employer_hires %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-4 border-b">{{ hire.client.company_name }}</td>
+                        <td class="py-2 px-4 border-b capitalize">{{ hire.status }}</td>
+                        <td class="py-2 px-4 border-b">{{ hire.start_date }}</td>
+                        <td class="py-2 px-4 border-b">{{ hire.end_date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">You have not hired any applicants yet.</p>
+        {% endif %}
+    </section>
     {% endif %}
 
-    <div class="user-profile">
-        <div class="profile-header">
-            <h2>{{ user.username }}'s Profile</h2>
-            <p>Member since: {{ user.date_joined|date:"F d, Y" }}</p>
-        </div>
-
-        <div class="profile-content">
-            <div class="profile-info">
-                <h3>Account Information</h3>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                {% if user.profile.location %}
-                <p><strong>Location:</strong> {{ user.profile.location }}</p>
-                {% endif %}
-                {% if user.profile.birth_date %}
-                <p><strong>Birth Date:</strong> {{ user.profile.birth_date|date:"F d, Y" }}</p>
-                {% endif %}
-                {% if user.profile.bio %}
-                <div class="bio">
-                    <h4>About Me</h4>
-                    <p>{{ user.profile.bio }}</p>
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold mb-4 text-gray-700">Edit Profile</h3>
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="font-semibold">User Information</legend>
+                <div class="mb-4">
+                    <label for="id_first_name" class="block font-medium mb-1">First Name</label>
+                    <input type="text" name="first_name" id="id_first_name" value="{{ user_form.first_name.value|default:user.first_name }}" class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
-                {% endif %}
-            </div>
-
-            <div class="profile-edit">
-                <h3>Edit Profile</h3>
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                    <fieldset class="form-group">
-                        <legend>User Information</legend>
-                        {{ user_form.as_p }}
-                    </fieldset>
-                    
-                    <fieldset class="form-group">
-                        <legend>Profile Information</legend>
-                        {{ profile_form.as_p }}
-                    </fieldset>
-                    
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Update Profile</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+                <div class="mb-4">
+                    <label for="id_last_name" class="block font-medium mb-1">Last Name</label>
+                    <input type="text" name="last_name" id="id_last_name" value="{{ user_form.last_name.value|default:user.last_name }}" class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div class="mb-4"></div>
+                    <label for="id_email" class="block font-medium mb-1">Email</label>
+                    <input type="email" name="email" id="id_email" value="{{ user_form.email.value|default:user.email }}" class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+            </fieldset>
+        </form>
+    </section>
 </div>
 
-<footer>
+<footer class="mt-12 text-center text-gray-400 text-sm">
     <p>&copy; 2025 Applicant Site. All rights reserved.</p>
 </footer>
 {% endblock %}

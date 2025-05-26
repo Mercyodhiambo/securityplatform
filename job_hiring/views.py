@@ -7,8 +7,9 @@ from django.contrib.auth.decorators import login_required  # Import the decorato
 from .models import Job, SecurityCompany, Applicant, JobApplication, User, Client
 # Import your models
 from django.shortcuts import redirect
-from .forms import CustomUserForm, ApplicantForm, SecurityCompanyForm, ClientForm
-from .models import User, Applicant, SecurityCompany, Client
+from .forms import CustomUserForm, ApplicantForm, SecurityCompanyForm, ClientForm, JobForm, JobApplicationForm, HireForm
+from .models import User, Applicant, SecurityCompany, Client, Hire
+from .decorators import employer_required, client_required, applicant_required
 
 
 def register_user(request):
@@ -76,14 +77,163 @@ def register_user(request):
     })
 
 
-# View for listing all jobs
+def log_in(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Logged in successfully!')
+            return redirect('landing_page')
+        else:
+            messages.error(request, 'Invalid email or password.')
+            return redirect('log_in')
+
+    return render(request, 'log_in.html')
+
+
+def log_out(request):
+    logout(request)
+    messages.success(request, 'Logged out successfully!')
+    # Redirect to the landing page or any other page
+    return redirect('landing_page')
+
+
+@login_required
+def profile(request):
+    user = request.user
+    context = {}
+
+    if user.role == 'applicant':
+        applications = JobApplication.objects.filter(applicant=user.applicant)
+        total_applications = applications.count()
+        accepted = applications.filter(status='accepted').count()
+        rejected = applications.filter(status='rejected').count()
+        pending = applications.filter(status='pending').count()
+        context.update({
+            'applications': applications,
+            'total_applications': total_applications,
+            'accepted': accepted,
+            'rejected': rejected,
+            'pending': pending,
+            'role': 'applicant',
+        })
+
+    elif user.role == 'client':
+        hires = user.client.hire_set.all()
+        total_hires = hires.count()
+        completed = hires.filter(status='completed').count()
+        ongoing = hires.filter(status='hired').count()
+        security_agencies_count = SecurityCompany.objects.count()
+        context.update({
+            'hires': hires,
+            'total_hires': total_hires,
+            'completed': completed,
+            'ongoing': ongoing,
+            'security_agencies_count': security_agencies_count,
+            'role': 'client',
+        })
+
+    elif user.role == 'employer':
+        company = user.securitycompany
+        jobs = Job.objects.filter(security_company=company)
+        total_jobs = jobs.count()
+        total_applications = JobApplication.objects.filter(job__in=jobs).count()
+        # Show hires where this company was selected by clients
+        hires = Hire.objects.filter(security_company=company)
+        print(f"Hires for company {company.name}: {hires}")  # Debugging line
+        total_hires = hires.count()
+        completed = hires.filter(status='completed').count()
+        ongoing = hires.filter(status='hired').count()
+        context.update({
+            'jobs': jobs,
+            'total_jobs': total_jobs,
+            'total_applications': total_applications,
+            'employer_hires': hires,
+            'total_hires': total_hires,
+            'completed': completed,
+            'ongoing': ongoing,
+            'role': 'employer',
+        })
+
+    return render(request, 'profile.html', context)
+
+
+
 def job_list(request):
-    jobs = Job.objects.all()  # Fetch all job entries
+    jobs = Job.objects.all().order_by('-posted_date')
     return render(request, 'jobs.html', {'jobs': jobs})
 
+
+
+@employer_required()
+def create_job(request):
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.security_company = request.user.securitycompany  # Assuming employer is linked
+            job.save()
+            return redirect('job_list')  # name of job listing view
+    else:
+        form = JobForm()
+    return render(request, 'create_job.html', {'form': form})
+
+
+@login_required
+def job_detail(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    applications = JobApplication.objects.filter(job_id=job_id)
+    return render(request, 'job_details.html', {'job': job, 'applications': applications})
+
+
+@applicant_required()
+def apply_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    applicant = request.user.applicant
+
+    if request.method == 'POST':
+        form = JobApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.applicant = applicant
+            application.job = job
+            application.save()
+            messages.success(request, 'Application submitted successfully!')
+            return redirect('job_list')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+            # If the form is not valid, re-render the form with errors
+            print(form.errors)
+            return render(request, 'jobs/apply_job.html', {'form': form, 'job': job})
+    else:
+        # If the request is GET, initialize an empty form
+        form = JobApplicationForm()
+
+    return render(request, 'jobs/apply_job.html', {'form': form, 'job': job})
+
+
+@client_required()
+def hire_agency(request, agency_id):
+    firm = SecurityCompany.objects.get(id=agency_id)
+    client = request.user.client
+    print(f"Client: {client}, Security Company: {firm}")  # Debugging line
+
+    if request.method == 'POST':
+        form = HireForm(request.POST)
+        if form.is_valid():
+            hire = form.save(commit=False)
+            hire.client = client
+            hire.security_company = firm
+            hire.save()
+            return redirect('profile')
+    else:
+        form = HireForm(initial={'security_company': firm})
+
+    return render(request, 'hire_firm.html', {'form': form, 'firm': firm})
+
 # View for clients page
-
-
 def clients(request):
     return render(request, 'clients.html')
 
@@ -108,43 +258,12 @@ def employer(request):
 # View for profile page
 
 
-def profile(request):
-    return render(request, 'profile.html')
-
 
 # View for job details
-def job_detail(request, job_id):
-    job = get_object_or_404(Job, id=job_id)
-    return render(request, 'job_details.html', {'job': job})
 
 
 def landing_page(request):
     return render(request, 'landing_page.html', {'page': 'landing'})
-
-# View for login
-
-
-def log_in(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(request, username=email, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Logged in successfully!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Invalid email or password.')
-            return redirect('log_in')
-
-    return render(request, 'log_in.html')
-
-
-def log_out(request):
-    logout(request)
-    messages.success(request, 'Logged out successfully!')
-    # Redirect to the landing page or any other page
-    return redirect('landing_page')
 
 
 # View for home
@@ -177,17 +296,6 @@ def submit_application(request, job_id):
 
     return render(request, 'apply.html', {'job_id': job_id})
 
-
-# View for posting a job
-def post_job(request):
-    # Assuming you have a way to check the user's role
-
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        employer_id = request.user.id  # Use the user's ID
-
-    return render(request, 'post_job.html')
 
 
 def list_agencies(request):
@@ -225,27 +333,4 @@ def submit_application(request, job_id):
     return render(request, 'apply.html', {'job_id': job_id})
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        # Update forms with POST data
-        user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(
-            request.POST, request.FILES, instance=request.user.profile)
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Your profile has been updated!')
-            return redirect('profile')
-    else:
-        # Initialize forms with current user data
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
-
-    context = {
-        'user_form': user_form,
-        'profile_form': profile_form
-    }
-
-    return render(request, 'profile.html', context)

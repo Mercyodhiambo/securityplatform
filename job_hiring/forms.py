@@ -2,7 +2,7 @@
 from .models import User, Applicant, SecurityCompany, Client
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from.models import User, Profile, SecurityCompany, Job, Applicant, JobApplication
+from.models import User, Profile, SecurityCompany, Job, Applicant, JobApplication, Hire
 
 
 class CustomUserForm(UserCreationForm):
@@ -10,6 +10,11 @@ class CustomUserForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'first_name',
                   'last_name', 'role', 'password1', 'password2')
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name',]
 
 
 class ApplicantForm(forms.ModelForm):
@@ -43,3 +48,21 @@ class ClientForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
             'phone': forms.TextInput(attrs={'class': 'w-full px-4 py-2 rounded border border-gray-200 bg-white text-dark-gray focus:outline-none focus:border-dark-gray'}),
         }
+
+
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = ['title', 'description', 'requirements', 'location', 'deadline']
+
+
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ['resume', 'cover_letter']
+
+
+class HireForm(forms.ModelForm):
+    class Meta:
+        model = Hire
+        fields = ['security_company', 'start_date', 'end_date']

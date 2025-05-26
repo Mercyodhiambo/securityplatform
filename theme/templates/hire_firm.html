@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Hire Security Company</title>
+{% endblock %}
+{% block content %}
+{% load static %}
+<section class="bg-gray-100 py-16 min-h-screen">
+    <div class="container mx-auto px-4 max-w-lg">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Hire Security Company</h2>
+            <!-- Company Details -->
+            <div class="mb-8 text-center">
+                {% if firm.logo %}
+                    <img src="{{ firm.logo.url }}" alt="{{ firm.name }} Logo"
+                        class="w-24 h-24 object-cover rounded-full border mx-auto mb-2">
+                {% else %}
+                    <div class="w-24 h-24 flex items-center justify-center rounded-full border bg-gray-200 mx-auto mb-2 text-xl font-bold text-gray-700">
+                        {{ firm.name|slice:":2"|upper }}
+                    </div>
+                {% endif %}
+                <h3 class="text-xl font-semibold text-gray-900">{{ firm.name }}</h3>
+                <p class="text-gray-600">{{ firm.description }}</p>
+                <p class="text-gray-500 text-sm">{{ firm.location }}</p>
+                <p class="text-gray-500 text-sm">{{ firm.services_offered }}</p>
+            </div>
+            <!-- Hire Form -->
+            <form method="POST" action="{% url 'hire_agency' agency_id=firm.id %}" class="space-y-6">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <input type="hidden" name="security_company" value="{{ form.security_company.value|default:firm.id }}">
+                <div>
+                    <label for="start_date" class="block text-gray-700 font-semibold mb-2">Start Date</label>
+                    {{ form.start_date.errors }}
+                    <input
+                        type="date"
+                        name="start_date"
+                        id="start_date"
+                        value="{{ form.start_date.value|default:'' }}"
+                        class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
+                        required
+                    >
+                </div>
+                <div>
+                    <label for="end_date" class="block text-gray-700 font-semibold mb-2">End Date</label>
+                    {{ form.end_date.errors }}
+                    <input
+                        type="date"
+                        name="end_date"
+                        id="end_date"
+                        value="{{ form.end_date.value|default:'' }}"
+                        class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
+                        required
+                    >
+                </div>
+                <div class="flex justify-center">
+                    <input type="submit" value="Hire"
+                        class="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-700 transition font-semibold cursor-pointer">
+                </div>
+                </form>
+                <div class="mt-6 text-center">
+                    <a href="{% url 'list_agencies' %}" class="text-gray-600 hover:text-gray-900 underline">Back to Agency List</a>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="bg-gray-900 text-gray-300 py-6 text-center mt-10">
+    <p>&copy; 2025 Security &amp; Job Hiring Platform. All rights reserved.</p>
+</footer>
+{% endblock %}

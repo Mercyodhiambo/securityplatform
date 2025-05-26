@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 # User model definition
@@ -44,6 +45,7 @@ class Job(models.Model):
     requirements = models.TextField(blank=True, null=True)  # Optional field for job requirements
     posted_date = models.DateTimeField(auto_now_add=True)
     location = models.CharField(max_length=100)
+    deadline = models.DateTimeField(null=True, blank=True)  # Optional deadline field
 
     def __str__(self):
         return self.title
@@ -64,9 +66,16 @@ class JobApplication(models.Model):
     cover_letter = models.FileField(upload_to='cover_letters/')
     job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE)  # Allow null values
     submitted_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=[
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ], default='pending')
 
     def __str__(self):
-        return f'{self.applicant.user.first_name} - {self.job.title if self.job else "No Job"}'
+        applicant_name = self.applicant.user.first_name if self.applicant and self.applicant.user else "No Applicant"
+        job_title = self.job.title if self.job else "No Job"
+        return f'{applicant_name} - {job_title}'
     
 
 class Profile(models.Model):
@@ -88,3 +97,23 @@ class Client(models.Model):
     
     def __str__(self):
         return self.company_name
+    
+
+class Hire(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    security_company = models.ForeignKey(
+        SecurityCompany, on_delete=models.CASCADE)
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    status = models.CharField(max_length=20, choices=[
+        ('pending', 'Pending'),
+        ('hired', 'Hired'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ], default='pending')
+
+    def __str__(self):
+        client_username = self.client.user.username if self.client and self.client.user else "Unknown Client"
+        company_username = self.security_company if self.security_company and self.security_company.name else "Unknown Company"
+        return f"{client_username} hired {company_username}"

@@ -22,11 +22,10 @@
                 {% if page == 'landing' %}
                 <a href="#services" class="hover:text-blue-300 transition">Services</a>
                 {% endif %}
-                <a href="job_list" class="hover:text-blue-300 transition">Applicant site</a>
-                <a href="{% url 'post_job' %}" class="hover:text-blue-300 transition">Post Job</a>
+                <a href="{% url 'job_list' %}" class="hover:text-blue-300 transition">Jobs</a>
                 <a href="{% url 'list_agencies' %}" class="hover:text-blue-300 transition">Security Agencies</a>
                 {% if user.is_authenticated %}
-                <span class="text-gray-300">Welcome, {{ user.username }}!</span>
+               <a href="{% url 'profile' %}"><span class="text-gray-300">Welcome, {{ user.username }}!</span></a>
                 <a href="{% url 'log_out' %}" class="hover:text-blue-300 transition">Logout</a>
                 {% else %}
                 <a href="{% url 'log_in' %}" class="hover:text-blue-300 transition">Login</a>

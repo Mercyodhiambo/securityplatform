@@ -4,97 +4,29 @@
 {% endblock %}
 {% block content %}
 
-<header class="mb-8">
-    <div class="flex items-center justify-between">
-        <h1 class="text-3xl font-bold text-gray-800">Job Listings</h1>
-        <a href="#" class="inline-block bg-blue-600 text-white px-5 py-2 rounded shadow hover:bg-blue-700 transition">New Job</a>
-    </div>
-    <nav class="mt-2 space-x-4">
-        <a href="{% url 'home' %}" class="text-gray-600 hover:text-blue-600">Home</a>
-        <a href="{% url 'clients' %}" class="text-gray-600 hover:text-blue-600">Clients</a>
-        <a href="{% url 'our_services' %}" class="text-gray-600 hover:text-blue-600">Services</a>
-    </nav>
-</header>
-
-<div class="container max-w-3xl mx-auto">
+<div class="container max-w-3xl mx-auto my-12">
     <section id="job-listings" class="job-listings">
         <h2 class="text-xl font-semibold mb-4 text-gray-700">Available Jobs</h2>
         <div class="flex flex-col gap-6">
-            <!-- Job Card 1 -->
+            {% for job in jobs %}
             <div class="flex bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
                 <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
-                    <strong class="text-gray-800">SecureGuard Ltd.</strong>
+                    <strong class="text-gray-800">{{job.security_company.name}}</strong>
                 </div>
                 <div class="flex-1 p-6">
-                    <h3 class="text-lg font-bold mb-2">May - June Recruitment</h3>
-                    <p><span class="font-semibold">Position:</span> Security Officer</p>
-                    <p><span class="font-semibold">Description:</span> Responsible for monitoring premises, patrolling regularly, and reporting suspicious activity. Must have at least 2 years of experience in security services.</p>
-                    <p><span class="font-semibold">Requirements:</span> Valid security license, good communication skills, ability to work night shifts.</p>
-                    <p><span class="font-semibold">Application Deadline:</span> 2025-06-15</p>
-                    <p><span class="font-semibold">Posted:</span> 2025-05-01</p>
-                    <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</button>
+                    <p><span class="font-semibold">Position: </span>{{job.title}}</p>
+                    <p><span class="font-semibold">Description: </span>{{job.description}}</p>
+                    <p><span class="font-semibold">Requirements: </span>{{job.requirements}}</p>
+                    <p><span class="font-semibold">Application Deadline: </span>{{job.deadline}}</p>
+                    <p class="mb-4"><span class="font-semibold">Posted: </span>{{job.posted_date}}</p>
+                    {% if request.user.role == 'applicant' %}
+                        <a href="{% url 'job_detail' job_id=job.id %}" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</a>
+                    {% elif request.user.role == 'employer' %}
+                        <a href="{% url 'job_detail' job_id=job.id %}" class="mt-4 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">View Details</a>
+                    {% endif %}
                 </div>
             </div>
-            <!-- Job Card 2 -->
-            <div class="flex bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
-                <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
-                    <strong class="text-gray-800">Alpha Security</strong>
-                </div>
-                <div class="flex-1 p-6">
-                    <h3 class="text-lg font-bold mb-2">May - June Recruitment</h3>
-                    <p><span class="font-semibold">Position:</span> CCTV Operator</p>
-                    <p><span class="font-semibold">Description:</span> Monitor CCTV feeds, report incidents, and maintain security logs. Previous experience preferred.</p>
-                    <p><span class="font-semibold">Requirements:</span> Attention to detail, basic computer skills, ability to work shifts.</p>
-                    <p><span class="font-semibold">Application Deadline:</span> 2025-06-10</p>
-                    <p><span class="font-semibold">Posted:</span> 2025-05-03</p>
-                    <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</button>
-                </div>
-            </div>
-            <!-- Job Card 3 -->
-            <div class="flex bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
-                <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
-                    <strong class="text-gray-800">Sentinel Group</strong>
-                </div>
-                <div class="flex-1 p-6">
-                    <h3 class="text-lg font-bold mb-2">May - June Recruitment</h3>
-                    <p><span class="font-semibold">Position:</span> Security Supervisor</p>
-                    <p><span class="font-semibold">Description:</span> Supervise security staff, schedule shifts, and ensure compliance with company policies.</p>
-                    <p><span class="font-semibold">Requirements:</span> 3+ years in security, leadership skills, valid driving license.</p>
-                    <p><span class="font-semibold">Application Deadline:</span> 2025-06-20</p>
-                    <p><span class="font-semibold">Posted:</span> 2025-05-05</p>
-                    <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</button>
-                </div>
-            </div>
-            <!-- Job Card 4 -->
-            <div class="flex bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
-                <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
-                    <strong class="text-gray-800">Guardian Force</strong>
-                </div>
-                <div class="flex-1 p-6">
-                    <h3 class="text-lg font-bold mb-2">May - June Recruitment</h3>
-                    <p><span class="font-semibold">Position:</span> Reception Security</p>
-                    <p><span class="font-semibold">Description:</span> Manage front desk, check-in visitors, and maintain visitor logs. Customer service experience is a plus.</p>
-                    <p><span class="font-semibold">Requirements:</span> Friendly demeanor, basic computer skills, neat appearance.</p>
-                    <p><span class="font-semibold">Application Deadline:</span> 2025-06-18</p>
-                    <p><span class="font-semibold">Posted:</span> 2025-05-07</p>
-                    <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</button>
-                </div>
-            </div>
-            <!-- Job Card 5 -->
-            <div class="flex bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
-                <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
-                    <strong class="text-gray-800">Watchtower Inc.</strong>
-                </div>
-                <div class="flex-1 p-6">
-                    <h3 class="text-lg font-bold mb-2">May - June Recruitment</h3>
-                    <p><span class="font-semibold">Position:</span> Patrol Guard</p>
-                    <p><span class="font-semibold">Description:</span> Patrol assigned areas, respond to alarms, and provide incident reports. Must be physically fit.</p>
-                    <p><span class="font-semibold">Requirements:</span> Good physical condition, attention to detail, flexible schedule.</p>
-                    <p><span class="font-semibold">Application Deadline:</span> 2025-06-25</p>
-                    <p><span class="font-semibold">Posted:</span> 2025-05-10</p>
-                    <button class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </section>
 </div>
