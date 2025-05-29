@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Home</title>
+{% endblock %}
+{% block content %}
+<div class="hero bg-gradient-to-r from-gray-900 to-gray-700 text-white text-center py-16">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Find Trusted Security Services</h1>
+    <p class="text-lg md:text-xl">Your gateway to skilled security personnel.</p>
+</div>
+
+<section class="sections container mx-auto py-12 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="section bg-gray-50 rounded-lg shadow p-6 text-center border-t-4 border-gray-900">
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">Job Posting</h3>
+        <p class="text-gray-700">Post jobs within minutes and reach qualified candidates easily.</p>
+    </div>
+    <div class="section bg-gray-50 rounded-lg shadow p-6 text-center border-t-4 border-gray-900">
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">Verified Personnel</h3>
+        <p class="text-gray-700">Rest assured that all profiles are thoroughly verified.</p>
+    </div>
+    <div class="section bg-gray-50 rounded-lg shadow p-6 text-center border-t-4 border-gray-900">
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">User-Friendly Interface</h3>
+        <p class="text-gray-700">Navigate effortlessly through our platform with a clean design.</p>
+    </div>
+</section>
+
+<section class="testimonials bg-gray-100 py-12">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-8 text-gray-900">What Our Clients Say</h2>
+        <div class="max-w-2xl mx-auto space-y-8">
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-gray-900">
+                <p class="italic text-gray-700">"Great service! Found the perfect security team for our event."</p>
+                <p class="mt-2 text-right text-gray-900 font-semibold">- Client A</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-gray-900">
+                <p class="italic text-gray-700">"The platform was easy to use and helped us hire quickly."</p>
+                <p class="mt-2 text-right text-gray-900 font-semibold">- Client B</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-gray-900">
+                <p class="italic text-gray-700">"Reliable and trustworthy personnel. Highly recommend!"</p>
+                <p class="mt-2 text-right text-gray-900 font-semibold">- Client C</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-gray-900 text-white py-6 mt-8">
+    <div class="container mx-auto text-center">
+        <p>&copy; 2025 Security Job and Hiring Platform | <a href="#" class="text-gray-300 hover:underline">Contact</a></p>
+    </div>
+</footer>
+{% endblock %}

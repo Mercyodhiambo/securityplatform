@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Job Listings</title>
+{% endblock %}
+{% block content %}
+
+<div class="container max-w-3xl mx-auto my-12">
+    <section id="job-listings" class="job-listings">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">Available Jobs</h2>
+        <div class="flex flex-col gap-6">
+            {% for job in jobs %}
+            <div class="flex bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
+                <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
+                    <strong class="text-gray-800">{{job.security_company.name}}</strong>
+                </div>
+                <div class="flex-1 p-6">
+                    <p><span class="font-semibold">Position: </span>{{job.title}}</p>
+                    <p><span class="font-semibold">Description: </span>{{job.description}}</p>
+                    <p><span class="font-semibold">Requirements: </span>{{job.requirements}}</p>
+                    <p><span class="font-semibold">Application Deadline: </span>{{job.deadline}}</p>
+                    <p class="mb-4"><span class="font-semibold">Posted: </span>{{job.posted_date}}</p>
+                    {% if request.user.role == 'applicant' %}
+                        <a href="{% url 'job_detail' job_id=job.id %}" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Apply Now</a>
+                    {% elif request.user.role == 'employer' %}
+                        <a href="{% url 'job_detail' job_id=job.id %}" class="mt-4 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">View Details</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<footer class="mt-12 text-center text-gray-400 text-sm">
+    <p>&copy; 2025 Applicant Site. All rights reserved.</p>
+</footer>
+
+{% endblock %}

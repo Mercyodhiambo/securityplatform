@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ job.title }} - Job Details</title>
+{% endblock %}
+
+{% block content %}
+<div class="container max-w-3xl mx-auto my-12">
+    <section class="bg-white border-l-4 border-gray-600 rounded-lg shadow-sm overflow-hidden">
+        <div class="min-w-[180px] bg-gray-100 flex items-center justify-center p-6">
+            <strong class="text-gray-800">{{ job.security_company.name }}</strong>
+        </div>
+        <div class="flex-1 p-6">
+            <h1 class="text-2xl font-bold mb-2 text-gray-800">{{ job.title }}</h1>
+            <p class="mb-2"><span class="font-semibold">Description: </span>{{ job.description }}</p>
+            <p class="mb-2"><span class="font-semibold">Requirements: </span>{{ job.requirements }}</p>
+            <p class="mb-2"><span class="font-semibold">Location: </span>{{ job.location }}</p>
+            <p class="mb-2"><span class="font-semibold">Application Deadline: </span>{{ job.deadline }}</p>
+            <p class="mb-4"><span class="font-semibold">Posted: </span>{{ job.posted_date }}</p>
+            <a href="{% url 'job_list' %}" class="inline-block mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition">Back to Job Listings</a>
+        </div>
+    </section>
+
+    {% if request.user.role == 'applicant' %}
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">Apply for this Job</h2>
+        <form action="{% url 'apply_job' job_id=job.id %}" method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block font-medium mb-1" for="id_resume">Resume</label>
+                <input type="file" name="resume" id="id_resume" class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                {% if form.resume.errors %}
+                    <p class="text-red-500 text-sm">{{ form.resume.errors }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label class="block font-medium mb-1" for="id_cover_letter">Cover Letter</label>
+                <input type="file" name="cover_letter" id="id_cover_letter" class="block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                {% if form.cover_letter.errors %}
+                    <p class="text-red-500 text-sm">{{ form.cover_letter.errors }}</p>
+                {% endif %}
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Submit Application</button>
+        </form>
+    </section>
+    {% elif request.user.role == 'employer' %}
+    <section class="mt-10 bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">Applications</h2>
+        <p class="mb-4 text-gray-600">Total Applicants: <span class="font-bold">{{ applications|length }}</span></p>
+        {% if applications %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b text-left">Applicant</th>
+                        <th class="py-2 px-4 border-b text-left">Resume</th>
+                        <th class="py-2 px-4 border-b text-left">Cover Letter</th>
+                        <th class="py-2 px-4 border-b text-left">Submitted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2 px-4 border-b">{{ application.applicant.get_full_name }}</td>
+                        <td class="py-2 px-4 border-b">
+                            <a href="{{ application.resume.url }}" class="text-blue-600 hover:underline" target="_blank">View</a>
+                        </td>
+                        <td class="py-2 px-4 border-b">
+                            <a href="{{ application.cover_letter.url }}" class="text-blue-600 hover:underline" target="_blank">View</a>
+                        </td>
+                        <td class="py-2 px-4 border-b">{{ application.submitted_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">No applications submitted yet.</p>
+        {% endif %}
+    </section>
+    {% endif %}
+</div>
+
+<footer class="mt-12 text-center text-gray-400 text-sm">
+    <p>&copy; 2025 Applicant Site. All rights reserved.</p>
+</footer>
+{% endblock %}

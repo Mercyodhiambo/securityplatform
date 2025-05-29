@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Landing Page</title>
+{% endblock %}
+{% block content %}
+{% load static %}
+<section class="relative h-[80vh] flex items-center justify-center">
+    <img src="{% static 'security_gaurd.jpg' %}" alt="Security" class="absolute inset-0 w-full h-full object-cover z-0" />
+    <div class="absolute inset-0 bg-black opacity-40 z-10"></div>
+    <div class="relative z-20 flex flex-col items-center justify-center text-white px-4 py-16 w-full">
+        <h2 class="text-2xl md:text-4xl font-semibold mb-4">Your Trusted Partner in Hiring</h2>
+        <p class="mb-8 text-lg md:text-xl text-gray-300 max-w-xl text-center">Find the best security talents for your organization.</p>
+        <a href="{% url 'register_user' %}"
+            class="cta-button bg-white hover:border-1 text-gray-900 font-bold py-3 px-8 rounded-lg shadow transition duration-200">Get Started</a>
+    </div>
+</section>
+<section class="sections container mx-auto py-16 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="section bg-gray-50 rounded-lg shadow p-6 text-center border-t-4 border-gray-900">
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">Job Posting</h3>
+        <p class="text-gray-700">Post jobs within minutes and reach qualified candidates easily.</p>
+    </div>
+    <div class="section bg-gray-50 rounded-lg shadow p-6 text-center border-t-4 border-gray-900">
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">Verified Personnel</h3>
+        <p class="text-gray-700">Rest assured that all profiles are thoroughly verified.</p>
+    </div>
+    <div class="section bg-gray-50 rounded-lg shadow p-6 text-center border-t-4 border-gray-900">
+        <h3 class="text-xl font-semibold mb-2 text-gray-900">User-Friendly Interface</h3>
+        <p class="text-gray-700">Navigate effortlessly through our platform with a clean design.</p>
+    </div>
+</section>
+<section id="services" class="py-8 bg-gray-100">
+    <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">Our Services</h2>
+    <div class="services grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="service bg-white rounded-lg shadow-lg p-8 flex flex-col items-center hover:shadow-xl transition">
+            <div class="mb-4 text-blue-900">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Job Postings</h3>
+            <p class="text-gray-600 text-center">Post job openings for security positions on our platform, reaching a wide audience of potential candidates.</p>
+        </div>
+        <div class="service bg-white rounded-lg shadow-lg p-8 flex flex-col items-center hover:shadow-xl transition">
+            <div class="mb-4 text-blue-900">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M8 12h8M12 8v8"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Resume Parsing</h3>
+            <p class="text-gray-600 text-center">Utilize our advanced resume parsing tools to extract key information from candidates' resumes quickly and efficiently.</p>
+        </div>
+        <div class="service bg-white rounded-lg shadow-lg p-8 flex flex-col items-center hover:shadow-xl transition">
+            <div class="mb-4 text-blue-900">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M8 7v6l4 2 4-2V7"></path>
+                    <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Interview Scheduling</h3>
+            <p class="text-gray-600 text-center">Schedule and manage interviews seamlessly through our platform, ensuring a smooth recruitment process.</p>
+        </div>
+        <div class="service bg-white rounded-lg shadow-lg p-8 flex flex-col items-center hover:shadow-xl transition">
+            <div class="mb-4 text-blue-900">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 7a4 4 0 01-8 0"></path>
+                    <rect x="4" y="15" width="16" height="5" rx="2"></rect>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Client Management</h3>
+            <p class="text-gray-600 text-center">Manage relationships with clients who seek security services, including understanding their specific needs.</p>
+        </div>
+        <div class="service bg-white rounded-lg shadow-lg p-8 flex flex-col items-center hover:shadow-xl transition">
+            <div class="mb-4 text-blue-900">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                    <path d="M7 11V7a5 5 0 0110 0v4"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Data Security</h3>
+            <p class="text-gray-600 text-center">Implement robust data security measures to protect sensitive user information from unauthorized access.</p>
+        </div>
+    </div>
+</section>
+<footer class="bg-gray-900 text-gray-300 py-6 text-center">
+    <p>&copy; 2025 Security &amp; Job Hiring Platform. All rights reserved.</p>
+</footer>
+
+{% endblock %}
